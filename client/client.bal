@@ -43,7 +43,8 @@ public function main() returns error? {
     };
     
     log:printInfo("Created test action handler request");
-    log:printInfo("Action Type: " + testRequest.actionType.toString());
+    string actionType = check testRequest.actionType.ensureType(string);
+    log:printInfo("Action Type: " + actionType);
     log:printInfo("Request JSON: " + testRequest.toJsonString());
     log:printInfo("Note: To process this request, send it to the server endpoint using http_client.bal");
     
