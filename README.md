@@ -10,23 +10,6 @@ This Ballerina module provides support for handling WSO2 Asgardeo action handler
 - **Extensible architecture** with support for custom handlers
 - **Example handlers** demonstrating common use cases
 
-## Project Structure
-
-```
-.
-├── Ballerina.toml                    # Project configuration
-├── server/                           # Server implementation (all backend logic)
-│   ├── service.bal                   # HTTP service endpoint
-│   ├── main.bal                      # Server entry point
-│   ├── types.bal                     # Type definitions for action handler payloads
-│   ├── handler.bal                   # Core handler functions and utilities
-│   └── examples.bal                  # Example custom handlers
-├── client/                            # Client examples
-│   ├── client.bal                    # Standalone client example
-│   └── http_client.bal               # HTTP client example
-└── README.md                          # This file
-```
-
 ## Usage
 
 ### 1. Start the Service
@@ -48,11 +31,23 @@ The service will start on `http://localhost:9090` with the following endpoints:
 - `POST /action-handler` - Main endpoint for Asgardeo action handler requests
 - `GET /health` - Health check endpoint
 
-### 2. Run Client Examples
+### 2. Run the Playground UI (React + TypeScript)
+
+Start the development server:
+
+```bash
+cd client
+npm install
+npm run dev
+```
+
+Open **http://localhost:3000** in your browser. The Vite dev server proxies `/api` requests to the Ballerina backend automatically.
+
+Use the **Form Builder** tab to build requests with dynamic claims, or switch to the **JSON Editor** tab for raw JSON input.
+
+### 3. Run Client Examples (Ballerina)
 
 #### Standalone Client
-
-Run the standalone client example:
 
 ```bash
 cd client
@@ -61,14 +56,14 @@ bal run client.bal
 
 #### HTTP Client
 
-Run the HTTP client example (requires the server to be running):
+Requires the server to be running:
 
 ```bash
 cd client
 bal run http_client.bal
 ```
 
-### 3. Configure in Asgardeo
+### 4. Configure in Asgardeo
 
 1. Log in to your Asgardeo console
 2. Navigate to **Extensions** > **Action Handlers**
@@ -76,7 +71,7 @@ bal run http_client.bal
 4. Set the endpoint URL to: `http://your-server:9090/action-handler`
 5. Select the action types you want to handle (e.g., `PRE_ISSUE_ACCESS_TOKEN`)
 
-### 4. Custom Handlers
+### 5. Custom Handlers
 
 You can create custom handlers by implementing the `ActionHandler` function type:
 
