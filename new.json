@@ -1,0 +1,184 @@
+{
+  "actionType": "PRE_ISSUE_ACCESS_TOKEN",
+  "event": {
+    "request": {
+      "additionalHeaders": [
+        {
+          "name": "authorization",
+          "value": [
+            "Basic SjR1cVo0R1hSd1hPV25aaE9kVGpyemw0RlBrYTowdndSSEJpNnpWZkFzckVvSHE2ME1yenJBWk4wck9meldrSVVTdEtXY0c0YQ=="
+          ]
+        },
+        {
+          "name": "user-agent",
+          "value": [
+            "PostmanRuntime/7.49.1"
+          ]
+        },
+        {
+          "name": "accept",
+          "value": [
+            "*/*"
+          ]
+        },
+        {
+          "name": "cache-control",
+          "value": [
+            "no-cache"
+          ]
+        },
+        {
+          "name": "postman-token",
+          "value": [
+            "6a3a396d-0f5f-49dd-b267-45bba1ea18c6"
+          ]
+        },
+        {
+          "name": "host",
+          "value": [
+            "localhost:9443"
+          ]
+        },
+        {
+          "name": "accept-encoding",
+          "value": [
+            "gzip, deflate, br"
+          ]
+        },
+        {
+          "name": "connection",
+          "value": [
+            "keep-alive"
+          ]
+        },
+        {
+          "name": "content-type",
+          "value": [
+            "application/x-www-form-urlencoded"
+          ]
+        },
+        {
+          "name": "content-length",
+          "value": [
+            "1370"
+          ]
+        }
+      ],
+      "additionalParams": [
+        {
+          "name": "subject_token_type",
+          "value": [
+            "urn:ietf:params:oauth:token-type:jwt"
+          ]
+        },
+        {
+          "name": "grant_type",
+          "value": [
+            "urn:ietf:params:oauth:grant-type:token-exchange"
+          ]
+        },
+        {
+          "name": "scope",
+          "value": [
+            "openid"
+          ]
+        },
+        {
+          "name": "subject_token",
+          "value": [
+            "eyJ4NXQiOiJjZmNONHdac21NMWxtOXBXX2xFUl9LS3ZwRmMiLCJraWQiOiJPV0ptTnpneU5UTmhNR05pTXpFMU5HUTNaall4WlRVellUSTJNbVpoWlRFeVl6SmtZVGRsTURCallqSTJNRE5sWldJeFltUTJNRGt6WVdZNU9ERm1aUV9SUzI1NiIsInR5cCI6ImF0K2p3dCIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJPSGFmM0QyaTBvazkxUWZPVUJ3ZnY4ajF3YWdhIiwiYXV0IjoiQVBQTElDQVRJT04iLCJpc3MiOiJodHRwczpcL1wvbG9jYWxob3N0Ojk0NDNcL29hdXRoMlwvdG9rZW4iLCJjbGllbnRfaWQiOiJPSGFmM0QyaTBvazkxUWZPVUJ3ZnY4ajF3YWdhIiwiYXVkIjpbIk9IYWYzRDJpMG9rOTFRZk9VQndmdjhqMXdhZ2EiLCJhYmNkIl0sIm5iZiI6MTc2NDA2MDU3NSwiYXpwIjoiT0hhZjNEMmkwb2s5MVFmT1VCd2Z2OGoxd2FnYSIsIm9yZ19pZCI6IjEwMDg0YThkLTExM2YtNDIxMS1hMGQ1LWVmZTM2YjA4MjIxMSIsImV4cCI6MTc2NDA2NDE3NSwib3JnX25hbWUiOiJTdXBlciIsImlhdCI6MTc2NDA2MDU3NSwianRpIjoiNjRkN2RiZDktNTNlNC00YWVhLTkzNjktMWU1ZDkyNDYxZWE1Iiwib3JnX2hhbmRsZSI6ImNhcmJvbi5zdXBlciJ9.CjcZrCFZD6myzwCSDjC_fFdKhPHkM68HnLzfIXUFUJL_Q3lpKrGctS10RCVY-I2Z9zth2194-bD-IWihASEaS2YZxAXxI4c6jDjc3hz65oN2UagWzpF5MxyhqGfZZYlWvE_KrhghpvVqJNMHvx6qaIE51PgHy1KiXGujGj6Lo67ImdpQyZPQFCm__eE4SS_SoM4xdG4C0hn1OMqFa1E0dBh0YkuGe_VLFZ8YFCDD7HYiD_HxxWE2YfCQz3_YNJaKKFvj0YUdvETHpEjPshYkWXjyKUfBPKZkwKpE2rDsdBD8yOLx2N8PR3SgDSB6U8xOA-Ma0Mmav-PBt58hU3-0hA"
+          ]
+        },
+        {
+          "name": "requested_token_type",
+          "value": [
+            "urn:ietf:params:oauth:token-type:access_token"
+          ]
+        }
+      ],
+      "clientId": "J4uqZ4GXRwXOWnZhOdTjrzl4FPka",
+      "grantType": "urn:ietf:params:oauth:grant-type:token-exchange",
+      "scopes": [
+        "openid"
+      ]
+    },
+    "tenant": {
+      "id": "-1234",
+      "name": "carbon.super"
+    },
+    "user": {
+      "id": "33b987ee-fa8e-4fb4-9bb1-b92564602163",
+      "organization": {
+        "id": "10084a8d-113f-4211-a0d5-efe36b082211",
+        "name": "Super",
+        "orgHandle": "carbon.super",
+        "depth": 0
+      }
+    },
+    "userStore": {},
+    "accessToken": {
+      "tokenType": "JWT",
+      "claims": [
+        {
+          "name": "iss",
+          "value": "https://localhost:9443/oauth2/token"
+        },
+        {
+          "name": "client_id",
+          "value": "J4uqZ4GXRwXOWnZhOdTjrzl4FPka"
+        },
+        {
+          "name": "aut",
+          "value": "APPLICATION_USER"
+        },
+        {
+          "name": "expires_in",
+          "value": 3600
+        },
+        {
+          "name": "aud",
+          "value": [
+            "J4uqZ4GXRwXOWnZhOdTjrzl4FPka"
+          ]
+        },
+        {
+          "name": "subject_type",
+          "value": "public"
+        },
+        {
+          "name": "sub",
+          "value": "OHaf3D2i0ok91QfOUBwfv8j1waga"
+        }
+      ],
+      "scopes": [
+        "openid"
+      ]
+    }
+  },
+  "allowedOperations": [
+    {
+      "op": "add",
+      "paths": [
+        "/accessToken/claims/",
+        "/accessToken/scopes/",
+        "/accessToken/claims/aud/"
+      ]
+    },
+    {
+      "op": "remove",
+      "paths": [
+        "/accessToken/scopes/",
+        "/accessToken/claims/aud/"
+      ]
+    },
+    {
+      "op": "replace",
+      "paths": [
+        "/accessToken/scopes/",
+        "/accessToken/claims/aud/",
+        "/accessToken/claims/expires_in"
+      ]
+    }
+  ],
+  "requestId": "e7647eec-b379-4e45-94fe-55dc5c93ac0a"
+}

@@ -1,0 +1,52 @@
+.app {
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.app-header h1 {
+  margin: 0 0 0.5rem 0;
+  color: #646cff;
+}
+
+.app-header p {
+  margin: 0;
+  color: #888;
+}
+
+.app-main {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.container {
+  display: grid;
+  gap: 2rem;
+}
+
+.error-message {
+  padding: 1rem;
+  background-color: #ff4444;
+  color: white;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.error-message h3 {
+  margin: 0 0 0.5rem 0;
+}
+
+.error-message p {
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .container {
+    grid-template-columns: 1fr 1fr;
+  }
+}
