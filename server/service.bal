@@ -1,48 +1,40 @@
 import ballerina/http;
-import ballerina/jsonutils;
 import ballerina/log;
 import ballerina/lang.value;
 
-// HTTP service for handling Asgardeo action handler requests
 service / on new http:Listener(9090) {
-    
-    resource function post action-handler(http:Request req) returns http:Response|http:InternalServerError {
-        // Parse the request body
+
+    resource function post actionHandler(http:Request req) returns http:Response|error {
         json|error payload = req.getJsonPayload();
         if payload is error {
             log:printError("Error parsing request payload", payload);
-            return http:INTERNAL_SERVER_ERROR;
+            return error("Failed to parse request payload");
         }
-        
-        // Convert JSON to ActionHandlerRequest
+
         ActionHandlerRequest|error actionRequest = value:ensureType(payload, ActionHandlerRequest);
         if actionRequest is error {
-            log:printError("Error converting payload to ActionHandlerRequest", actionRequest);
-            return http:INTERNAL_SERVER_ERROR;
+            log:printError("Error converting payload to ActionHandlerRequest: " + actionRequest.message());
+            return error("Invalid request payload format: " + actionRequest.message());
         }
-        
-        // Process the action
+
         ActionHandlerResponse|error response = processAction(actionRequest);
         if response is error {
             log:printError("Error processing action", response);
-            return http:INTERNAL_SERVER_ERROR;
+            return error("Failed to process action");
         }
-        
-        // Convert response to JSON
+
         json responseJson = <json>response;
-        
-        // Return HTTP response
+
         http:Response httpResponse = new;
         httpResponse.setJsonPayload(responseJson);
         httpResponse.setHeader("Content-Type", "application/json");
         return httpResponse;
     }
-    
-    // Health check endpoint
+
     resource function get health() returns json {
         return {
-            status: "healthy",
-            service: "asgardeo-action-handler"
+            status: "success",
+            "service": "asgardeo-action-handler"
         };
     }
 }
