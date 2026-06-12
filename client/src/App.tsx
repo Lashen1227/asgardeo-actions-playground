@@ -1,12 +1,10 @@
 import { useState, useCallback } from 'react'
-import { ActionHandlerRequest, ActionHandlerResponse } from './types'
+import { ActionHandlerRequest, ActionHandlerResponse, processRequest } from './types'
 import ActionHandlerForm from './components/ActionHandlerForm'
 import JsonEditor from './components/JsonEditor'
 import ResponseDisplay from './components/ResponseDisplay'
 
 type Tab = 'form' | 'json'
-
-const API_URL = '/api/action-handler'
 
 function App() {
   const [activeTab, setActiveTab] = useState<Tab>('form')
@@ -16,25 +14,17 @@ function App() {
   const [error, setError] = useState<string | null>(null)
   const [dark, setDark] = useState(true)
 
-  const sendRequest = useCallback(async (body: ActionHandlerRequest) => {
+  const process = useCallback(async (body: ActionHandlerRequest) => {
     setLoading(true)
     setError(null)
     setResponse(null)
     setRawResponse('')
+    await new Promise(r => setTimeout(r, 300))
     try {
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      })
-      const text = await res.text()
-      setRawResponse(text)
-      if (!res.ok) {
-        setError(`HTTP ${res.status}: ${text}`)
-        return
-      }
-      const data: ActionHandlerResponse = JSON.parse(text)
-      setResponse(data)
+      const result = processRequest(body)
+      const json = JSON.stringify(result, null, 2)
+      setRawResponse(json)
+      setResponse(result)
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : String(err))
     } finally {
@@ -43,17 +33,17 @@ function App() {
   }, [])
 
   const handleFormSubmit = useCallback((data: ActionHandlerRequest) => {
-    sendRequest(data)
-  }, [sendRequest])
+    process(data)
+  }, [process])
 
   const handleJsonSubmit = useCallback((json: string) => {
     try {
       const data: ActionHandlerRequest = JSON.parse(json)
-      sendRequest(data)
+      process(data)
     } catch {
       setError('Invalid JSON payload')
     }
-  }, [sendRequest])
+  }, [process])
 
   return (
     <div className={dark ? 'dark' : ''}>
@@ -61,8 +51,8 @@ function App() {
         <header className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
           <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
             <div>
-              <h1 className="text-xl font-bold">WSO2 Asgardeo Action Handler</h1>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Playground UI</p>
+              <h1 className="text-xl font-bold">Asgardeo Actions Playground</h1>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Test and explore action handler payloads</p>
             </div>
             <button
               onClick={() => setDark(d => !d)}

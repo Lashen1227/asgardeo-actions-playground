@@ -124,6 +124,43 @@ export function buildRequest(form: FormState): ActionHandlerRequest {
   };
 }
 
+export function processRequest(req: ActionHandlerRequest): ActionHandlerResponse {
+  const event: Event = JSON.parse(JSON.stringify(req.event))
+  const ops = req.allowedOperations
+  const accessToken = event.accessToken
+
+  if (ops && accessToken) {
+    for (const op of ops) {
+      for (const path of op.paths) {
+        const clean = path.endsWith('/') ? path.slice(0, -1) : path
+        if (op.op === 'add') {
+          if (clean.startsWith('/accessToken/claims/')) {
+            const name = clean.slice('/accessToken/claims/'.length)
+            if (name && accessToken.claims) accessToken.claims.push({ name, value: '' })
+          } else if (clean.startsWith('/accessToken/scopes/')) {
+            const scope = clean.slice('/accessToken/scopes/'.length)
+            if (scope && accessToken.scopes) accessToken.scopes.push(scope)
+          }
+        } else if (op.op === 'remove') {
+          if (clean.startsWith('/accessToken/claims/')) {
+            const name = clean.slice('/accessToken/claims/'.length)
+            if (name && accessToken.claims) {
+              accessToken.claims = accessToken.claims.filter(c => c.name !== name)
+            }
+          } else if (clean.startsWith('/accessToken/scopes/')) {
+            const scope = clean.slice('/accessToken/scopes/'.length)
+            if (scope && accessToken.scopes) {
+              accessToken.scopes = accessToken.scopes.filter(s => s !== scope)
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return { event, requestId: req.requestId }
+}
+
 export const defaultFormState: FormState = {
   actionType: 'PRE_ISSUE_ACCESS_TOKEN',
   clientId: 'test-client',
