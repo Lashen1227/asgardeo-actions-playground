@@ -12,8 +12,23 @@ function copy(text: string) {
   navigator.clipboard.writeText(text)
 }
 
+function isTokenAction(type?: string) {
+  return type === 'PRE_ISSUE_ACCESS_TOKEN' || type === 'PRE_ISSUE_ID_TOKEN'
+}
+
 export default function ResponseDisplay({ response, rawResponse, loading, error }: Props) {
   const [expanded, setExpanded] = useState(true)
+
+  const actionType = response?.event?.accessToken ? 'PRE_ISSUE_ACCESS_TOKEN'
+    : response?.event?.idToken ? 'PRE_ISSUE_ID_TOKEN'
+    : response?.event?.user?.updatingCredential ? 'PRE_UPDATE_PASSWORD'
+    : response?.event?.request?.claims ? 'PRE_UPDATE_PROFILE'
+    : undefined
+
+  const statusColor = response?.actionStatus === 'SUCCESS' ? 'green'
+    : response?.actionStatus === 'FAILED' ? 'red'
+    : response?.actionStatus === 'ERROR' ? 'red'
+    : 'green'
 
   return (
     <div className="h-full">
@@ -48,9 +63,9 @@ export default function ResponseDisplay({ response, rawResponse, loading, error 
       {response && !loading && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
-              Success
+            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-${statusColor}-100 dark:bg-${statusColor}-900/30 text-${statusColor}-700 dark:text-${statusColor}-400`}>
+              <span className={`w-1.5 h-1.5 rounded-full bg-${statusColor}-500`} />
+              {response.actionStatus}
             </span>
             <div className="flex gap-2">
               <button
@@ -68,7 +83,39 @@ export default function ResponseDisplay({ response, rawResponse, loading, error 
             </div>
           </div>
 
-          {/* JSON Display */}
+          {response.actionStatus === 'FAILED' && (
+            <div className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+              <p className="text-sm font-medium text-red-700 dark:text-red-400 mb-1">Failure: {response.failureReason}</p>
+              {response.failureDescription && (
+                <p className="text-xs text-red-600 dark:text-red-300">{response.failureDescription}</p>
+              )}
+            </div>
+          )}
+
+          {response.actionStatus === 'ERROR' && (
+            <div className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+              <p className="text-sm font-medium text-red-700 dark:text-red-400 mb-1">Error: {response.errorMessage}</p>
+              {response.errorDescription && (
+                <p className="text-xs text-red-600 dark:text-red-300">{response.errorDescription}</p>
+              )}
+            </div>
+          )}
+
+          {response.operations && response.operations.length > 0 && (
+            <div className="rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <div className="px-3 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-500 dark:text-gray-400">
+                Operations Applied
+              </div>
+              <div className="p-3 space-y-1">
+                {response.operations.map((op, i) => (
+                  <div key={i} className="text-xs font-mono px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+                    <span className="text-indigo-500 font-medium">{op.op}</span> {op.path}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div className="px-3 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-500 dark:text-gray-400">
               Response JSON
@@ -78,8 +125,7 @@ export default function ResponseDisplay({ response, rawResponse, loading, error 
             </pre>
           </div>
 
-          {/* Token Info */}
-          {expanded && response.event?.accessToken && (
+          {expanded && response.event && isTokenAction(actionType) && response.event.accessToken && (
             <div className="rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
               <div className="px-3 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-500 dark:text-gray-400">
                 Access Token Breakdown
@@ -118,25 +164,107 @@ export default function ResponseDisplay({ response, rawResponse, loading, error 
                     </div>
                   </div>
                 )}
+              </div>
+            </div>
+          )}
 
-                {!response.event.accessToken.claims?.length && !response.event.accessToken.scopes?.length && (
-                  <p className="text-xs text-gray-400 italic">No claims or scopes in response</p>
+          {expanded && response.event && actionType === 'PRE_ISSUE_ID_TOKEN' && response.event.idToken && (
+            <div className="rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <div className="px-3 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-500 dark:text-gray-400">
+                ID Token Breakdown
+              </div>
+              <div className="p-4 space-y-2 bg-white dark:bg-gray-800/50">
+                {response.event.idToken.claims && response.event.idToken.claims.length > 0 ? (
+                  <div className="space-y-1">
+                    {response.event.idToken.claims.map((c, i) => (
+                      <div key={i} className="flex gap-2 text-xs font-mono px-2 py-1 rounded bg-gray-100 dark:bg-gray-800">
+                        <span className="text-indigo-500 dark:text-indigo-400 font-medium shrink-0">{c.name}:</span>
+                        <span className="text-gray-700 dark:text-gray-300 break-all">
+                          {Array.isArray(c.value) ? c.value.join(', ') : String(c.value)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-gray-400 italic">No claims in response</p>
                 )}
+              </div>
+            </div>
+          )}
 
-                {response.event.tenant && (
-                  <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-                    <span className="text-xs font-medium text-gray-500 dark:text-gray-400 block mb-1">Tenant</span>
-                    <p className="text-xs font-mono text-gray-600 dark:text-gray-400">
-                      {response.event.tenant.id ? `${response.event.tenant.name || '?'} (${response.event.tenant.id})` : 'N/A'}
-                    </p>
+          {expanded && response.event && actionType === 'PRE_UPDATE_PASSWORD' && (
+            <div className="rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <div className="px-3 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-500 dark:text-gray-400">
+                Password Update Details
+              </div>
+              <div className="p-4 space-y-2 bg-white dark:bg-gray-800/50">
+                {response.event.initiatorType && (
+                  <div className="flex gap-2 text-xs font-mono">
+                    <span className="text-gray-500 w-28 shrink-0">Initiator</span>
+                    <span className="text-gray-700 dark:text-gray-300">{response.event.initiatorType}</span>
+                  </div>
+                )}
+                {response.event.action && (
+                  <div className="flex gap-2 text-xs font-mono">
+                    <span className="text-gray-500 w-28 shrink-0">Action</span>
+                    <span className="text-gray-700 dark:text-gray-300">{response.event.action}</span>
+                  </div>
+                )}
+                {response.event.user?.updatingCredential && (
+                  <div className="flex gap-2 text-xs font-mono">
+                    <span className="text-gray-500 w-28 shrink-0">Credential Format</span>
+                    <span className="text-gray-700 dark:text-gray-300">{response.event.user.updatingCredential.format}</span>
                   </div>
                 )}
               </div>
             </div>
           )}
 
-          {/* Event Info */}
-          {expanded && response.event.request && (
+          {expanded && response.event && actionType === 'PRE_UPDATE_PROFILE' && (
+            <div className="rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <div className="px-3 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-500 dark:text-gray-400">
+                Profile Update Details
+              </div>
+              <div className="p-4 space-y-2 bg-white dark:bg-gray-800/50">
+                {response.event.initiatorType && (
+                  <div className="flex gap-2 text-xs font-mono">
+                    <span className="text-gray-500 w-28 shrink-0">Initiator</span>
+                    <span className="text-gray-700 dark:text-gray-300">{response.event.initiatorType}</span>
+                  </div>
+                )}
+                {response.event.request?.claims && response.event.request.claims.length > 0 && (
+                  <div>
+                    <span className="text-xs font-medium text-gray-500 dark:text-gray-400 block mb-1">Updated Attributes</span>
+                    <div className="space-y-1">
+                      {response.event.request.claims.map((c, i) => (
+                        <div key={i} className="flex gap-2 text-xs font-mono px-2 py-1 rounded bg-gray-100 dark:bg-gray-800">
+                          <span className="text-indigo-500 dark:text-indigo-400 font-medium shrink-0 max-w-48 truncate">{c.uri?.split('/').pop()}:</span>
+                          <span className="text-gray-700 dark:text-gray-300 break-all">
+                            {Array.isArray(c.updatingValue) ? c.updatingValue.join(', ') : String(c.updatingValue || c.value)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {expanded && response.event?.tenant && (
+            <div className="rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <div className="px-3 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-500 dark:text-gray-400">
+                Tenant
+              </div>
+              <div className="p-3 bg-white dark:bg-gray-800/50">
+                <p className="text-xs font-mono text-gray-600 dark:text-gray-400">
+                  {response.event.tenant.id ? `${response.event.tenant.name || '?'} (${response.event.tenant.id})` : 'N/A'}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {expanded && response.event?.request?.clientId && (
             <div className="rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
               <div className="px-3 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-500 dark:text-gray-400">
                 Request Info

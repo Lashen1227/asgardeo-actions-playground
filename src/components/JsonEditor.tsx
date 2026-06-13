@@ -12,8 +12,6 @@ export default function JsonEditor({ onSubmit, loading }: Props) {
   const defaultJson = JSON.stringify(buildRequest(defaultFormState), null, 2)
   const [json, setJson] = useState(defaultJson)
   const [error, setError] = useState<string | null>(null)
-  const [formatted, setFormatted] = useState(true)
-
   const handleSubmit = () => {
     try {
       JSON.parse(json)
@@ -28,7 +26,6 @@ export default function JsonEditor({ onSubmit, loading }: Props) {
     try {
       const parsed = JSON.parse(json)
       setJson(JSON.stringify(parsed, null, 2))
-      setFormatted(true)
       setError(null)
     } catch {
       setError('Cannot format — JSON is invalid.')
@@ -39,7 +36,6 @@ export default function JsonEditor({ onSubmit, loading }: Props) {
     try {
       const parsed = JSON.parse(json)
       setJson(JSON.stringify(parsed))
-      setFormatted(false)
       setError(null)
     } catch {
       setError('Cannot minify — JSON is invalid.')
