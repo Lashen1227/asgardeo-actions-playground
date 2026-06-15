@@ -1,9 +1,15 @@
-import { useState } from 'react'
+import { forwardRef, useCallback, useImperativeHandle, useState } from 'react'
 import { FormState, Claim, ProfileClaim, defaultFormState, buildRequest, ActionHandlerRequest } from '../types'
 
 interface Props {
   onSubmit: (data: ActionHandlerRequest) => void
   loading: boolean
+  initialForm?: FormState
+}
+
+export interface ActionHandlerFormHandle {
+  submit: () => void
+  reset: () => void
 }
 
 const inputClass = 'w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition text-sm'
@@ -23,8 +29,11 @@ function isProfileAction(type: string) {
   return type === 'PRE_UPDATE_PROFILE'
 }
 
-export default function ActionHandlerForm({ onSubmit, loading }: Props) {
-  const [form, setForm] = useState<FormState>(defaultFormState)
+const ActionHandlerForm = forwardRef<ActionHandlerFormHandle, Props>(function ActionHandlerForm(
+  { onSubmit, loading, initialForm = defaultFormState },
+  ref,
+) {
+  const [form, setForm] = useState<FormState>(initialForm)
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm(prev => ({ ...prev, [key]: value }))
@@ -86,9 +95,22 @@ export default function ActionHandlerForm({ onSubmit, loading }: Props) {
     })
   }
 
+  const submit = useCallback(() => {
+    onSubmit(buildRequest(form))
+  }, [form, onSubmit])
+
+  const reset = useCallback(() => {
+    setForm(initialForm)
+  }, [initialForm])
+
+  useImperativeHandle(ref, () => ({
+    submit,
+    reset,
+  }), [submit, reset])
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    onSubmit(buildRequest(form))
+    submit()
   }
 
   return (
@@ -110,7 +132,7 @@ export default function ActionHandlerForm({ onSubmit, loading }: Props) {
         </select>
       </div>
 
-      {(isTokenAction(form.actionType)) && (
+      {isTokenAction(form.actionType) && (
         <div className={sectionClass}>
           <h3 className="text-sm font-semibold mb-3 text-indigo-600 dark:text-indigo-400">Request Details</h3>
           <div className="space-y-3">
@@ -345,7 +367,7 @@ export default function ActionHandlerForm({ onSubmit, loading }: Props) {
         </button>
         <button
           type="button"
-          onClick={() => setForm(defaultFormState)}
+          onClick={reset}
           className="px-4 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium rounded-lg transition text-sm"
         >
           Reset
@@ -354,14 +376,16 @@ export default function ActionHandlerForm({ onSubmit, loading }: Props) {
 
       <details className="group">
         <summary className="cursor-pointer text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 select-none">
-          <span className="group-open:hidden">▶</span>
-          <span className="hidden group-open:inline">▼</span>
+          <span className="group-open:hidden">{'>'}</span>
+          <span className="hidden group-open:inline">{'v'}</span>
           {' '}Request Preview
         </summary>
-        <pre className="mt-2 p-3 rounded-lg bg-gray-900 text-gray-100 text-xs overflow-auto max-h-80 border border-gray-700">
+        <pre className="pro-scrollbar-thin mt-2 p-3 rounded-lg bg-gray-900 text-gray-100 text-xs overflow-auto max-h-80 border border-gray-700">
           {JSON.stringify(buildRequest(form), null, 2)}
         </pre>
       </details>
     </form>
   )
-}
+})
+
+export default ActionHandlerForm

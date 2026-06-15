@@ -1,55 +1,76 @@
-import { useState } from 'react'
+import { forwardRef, useCallback, useImperativeHandle, useState } from 'react'
 import { buildRequest, defaultFormState } from '../types'
 
 interface Props {
   onSubmit: (json: string) => void
   loading: boolean
+  initialJson?: string
 }
 
-const textareaClass = 'w-full h-96 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-mono text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition resize-y'
+export interface JsonEditorHandle {
+  submit: () => void
+  reset: () => void
+}
 
-export default function JsonEditor({ onSubmit, loading }: Props) {
+const textareaClass = 'w-full min-h-[34rem] px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-mono text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition resize-none'
+
+const JsonEditor = forwardRef<JsonEditorHandle, Props>(function JsonEditor(
+  { onSubmit, loading, initialJson },
+  ref,
+) {
   const defaultJson = JSON.stringify(buildRequest(defaultFormState), null, 2)
-  const [json, setJson] = useState(defaultJson)
+  const startJson = initialJson ?? defaultJson
+  const [json, setJson] = useState(startJson)
   const [error, setError] = useState<string | null>(null)
-  const handleSubmit = () => {
+
+  const handleSubmit = useCallback(() => {
     try {
       JSON.parse(json)
       setError(null)
       onSubmit(json)
     } catch {
-      setError('Invalid JSON — please check syntax before sending.')
+      setError('Invalid JSON - please check syntax before sending.')
     }
-  }
+  }, [json, onSubmit])
 
-  const format = () => {
+  const format = useCallback(() => {
     try {
       const parsed = JSON.parse(json)
       setJson(JSON.stringify(parsed, null, 2))
       setError(null)
     } catch {
-      setError('Cannot format — JSON is invalid.')
+      setError('Cannot format - JSON is invalid.')
     }
-  }
+  }, [json])
 
-  const minify = () => {
+  const minify = useCallback(() => {
     try {
       const parsed = JSON.parse(json)
       setJson(JSON.stringify(parsed))
       setError(null)
     } catch {
-      setError('Cannot minify — JSON is invalid.')
+      setError('Cannot minify - JSON is invalid.')
     }
-  }
+  }, [json])
+
+  const reset = useCallback(() => {
+    setJson(startJson)
+    setError(null)
+  }, [startJson])
+
+  useImperativeHandle(ref, () => ({
+    submit: handleSubmit,
+    reset,
+  }), [handleSubmit, reset])
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-3">
         <h3 className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">JSON Editor</h3>
         <div className="flex gap-2">
           <button
             type="button"
-            onClick={() => setJson(defaultJson)}
+            onClick={reset}
             className="px-3 py-1.5 text-xs font-medium border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
           >
             Reset
@@ -74,7 +95,7 @@ export default function JsonEditor({ onSubmit, loading }: Props) {
       <textarea
         value={json}
         onChange={e => { setJson(e.target.value); setError(null) }}
-        className={textareaClass}
+        className={`${textareaClass} pro-scrollbar-thin`}
         spellCheck={false}
       />
 
@@ -99,4 +120,6 @@ export default function JsonEditor({ onSubmit, loading }: Props) {
       </button>
     </div>
   )
-}
+})
+
+export default JsonEditor

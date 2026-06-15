@@ -1,25 +1,92 @@
-import { useState, useCallback } from 'react'
-import { ActionHandlerRequest, ActionHandlerResponse, processRequest } from './types'
-import ActionHandlerForm from './components/ActionHandlerForm'
-import JsonEditor from './components/JsonEditor'
+import { useMemo, useRef, useState, useCallback } from 'react'
+import {
+  ActionHandlerRequest,
+  ActionHandlerResponse,
+  FormState,
+  buildRequest,
+  defaultFormState,
+  processRequest,
+} from './types'
+import ActionHandlerForm, { ActionHandlerFormHandle } from './components/ActionHandlerForm'
+import Header from './components/Header'
+import JsonEditor, { JsonEditorHandle } from './components/JsonEditor'
 import ResponseDisplay from './components/ResponseDisplay'
 
 type Tab = 'form' | 'json'
 
+interface ExamplePreset {
+  id: string
+  label: string
+  description: string
+  form: FormState
+}
+
+const examples: ExamplePreset[] = [
+  {
+    id: 'access-token',
+    label: 'pre-issue access token action',
+    description: 'Token claims and scopes',
+    form: defaultFormState,
+  },
+  {
+    id: 'id-token',
+    label: 'pre-issue id token action',
+    description: 'ID token claims',
+    form: {
+      ...defaultFormState,
+      actionType: 'PRE_ISSUE_ID_TOKEN',
+      accessTokenScopes: '',
+    },
+  },
+  {
+    id: 'password',
+    label: 'pre-update password action',
+    description: 'Password update validation',
+    form: {
+      ...defaultFormState,
+      actionType: 'PRE_UPDATE_PASSWORD',
+      credentialFormat: 'PLAIN_TEXT',
+    },
+  },
+  {
+    id: 'profile',
+    label: 'pre-update profile action',
+    description: 'Profile attribute updates',
+    form: {
+      ...defaultFormState,
+      actionType: 'PRE_UPDATE_PROFILE',
+    },
+  },
+]
+
 function App() {
-  const [activeTab, setActiveTab] = useState<Tab>('form')
+  const [activeTab, setActiveTab] = useState<Tab>('json')
+  const [selectedExampleId, setSelectedExampleId] = useState(examples[0].id)
   const [response, setResponse] = useState<ActionHandlerResponse | null>(null)
   const [rawResponse, setRawResponse] = useState<string>('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [dark, setDark] = useState(true)
 
+  const formRef = useRef<ActionHandlerFormHandle>(null)
+  const jsonRef = useRef<JsonEditorHandle>(null)
+
+  const selectedExample = useMemo(
+    () => examples.find(example => example.id === selectedExampleId) ?? examples[0],
+    [selectedExampleId],
+  )
+
+  const selectedRequestJson = useMemo(
+    () => JSON.stringify(buildRequest(selectedExample.form), null, 2),
+    [selectedExample],
+  )
+
   const process = useCallback(async (body: ActionHandlerRequest) => {
     setLoading(true)
     setError(null)
     setResponse(null)
     setRawResponse('')
-    await new Promise(r => setTimeout(r, 300))
+    await new Promise(resolve => setTimeout(resolve, 220))
     try {
       const result = processRequest(body)
       const json = JSON.stringify(result, null, 2)
@@ -31,6 +98,19 @@ function App() {
       setLoading(false)
     }
   }, [])
+
+  const handleRun = useCallback(() => {
+    if (loading) {
+      return
+    }
+
+    if (activeTab === 'form') {
+      formRef.current?.submit()
+      return
+    }
+
+    jsonRef.current?.submit()
+  }, [activeTab, loading])
 
   const handleFormSubmit = useCallback((data: ActionHandlerRequest) => {
     process(data)
@@ -45,70 +125,144 @@ function App() {
     }
   }, [process])
 
+  const handleClear = useCallback(() => {
+    setResponse(null)
+    setRawResponse('')
+    setError(null)
+  }, [])
+
+  const editorKey = `${selectedExample.id}-${activeTab}`
+
   return (
     <div className={dark ? 'dark' : ''}>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors">
-        <header className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-            <div>
-              <h1 className="text-xl font-bold">Asgardeo Actions Playground</h1>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Test and explore action handler payloads</p>
-            </div>
-            <button
-              onClick={() => setDark(d => !d)}
-              className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
-              title="Toggle dark mode"
-            >
-              {dark ? (
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-              ) : (
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
-              )}
-            </button>
-          </div>
-        </header>
+      <div className="min-h-screen bg-[#f5f5f2] text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors">
+        <div className="mx-auto flex min-h-screen max-w-[1920px] flex-col">
+          <Header dark={dark} onToggleTheme={() => setDark(value => !value)} />
 
-        <main className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex gap-1 mb-6 border-b border-gray-200 dark:border-gray-700">
-            <button
-              onClick={() => setActiveTab('form')}
-              className={`px-5 py-2.5 text-sm font-medium rounded-t-lg transition
-                ${activeTab === 'form'
-                  ? 'bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 border border-b-0 border-gray-200 dark:border-gray-700 -mb-px'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'}`}
-            >
-              Form Builder
-            </button>
-            <button
-              onClick={() => setActiveTab('json')}
-              className={`px-5 py-2.5 text-sm font-medium rounded-t-lg transition
-                ${activeTab === 'json'
-                  ? 'bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 border border-b-0 border-gray-200 dark:border-gray-700 -mb-px'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'}`}
-            >
-              JSON Editor
-            </button>
-          </div>
+          <main className="grid flex-1 grid-cols-1 overflow-hidden xl:grid-cols-[19rem_minmax(0,1fr)]">
+            <aside className="flex flex-col h-full bg-white border-b border-slate-200 dark:border-slate-800 dark:bg-slate-900 xl:border-b-0 xl:border-r">
+              <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-800">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Examples</p>
+              </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-            <div>
-              {activeTab === 'form' ? (
-                <ActionHandlerForm onSubmit={handleFormSubmit} loading={loading} />
-              ) : (
-                <JsonEditor onSubmit={handleJsonSubmit} loading={loading} />
-              )}
-            </div>
+              <div className="flex-1 p-2 overflow-auto pro-scrollbar">
+                <div className="space-y-1">
+                  {examples.map(example => {
+                    const selected = example.id === selectedExampleId
+                    return (
+                      <button
+                        key={example.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedExampleId(example.id)
+                          setError(null)
+                        }}
+                        className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition ${
+                          selected
+                            ? 'bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-white'
+                            : 'text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800/60'
+                        }`}
+                      >
+                        <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M7 7h10M7 12h10M7 17h6" />
+                        </svg>
+                        <span className="flex-1 min-w-0">
+                          <span className="block text-sm font-medium truncate">{example.label}</span>
+                          <span className="block truncate text-[11px] text-slate-400">{example.description}</span>
+                        </span>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
 
-            <div>
-              <ResponseDisplay
-                response={response}
-                rawResponse={rawResponse}
-                loading={loading}
-                error={error}
-              />
-            </div>
-          </div>
-        </main>
+              <div className="p-4 border-t border-slate-200 dark:border-slate-800">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Workspace</p>
+                  <button
+                    type="button"
+                    className="px-2 py-1 text-xs border rounded-md border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+                    onClick={() => setActiveTab(tab => tab === 'form' ? 'json' : 'form')}
+                  >
+                    {activeTab === 'form' ? 'JSON' : 'Form'}
+                  </button>
+                </div>
+              </div>
+            </aside>
+
+            <section className="grid min-h-0 grid-cols-1 overflow-hidden xl:grid-cols-[minmax(0,1.05fr)_minmax(24rem,0.95fr)]">
+              <div className="flex flex-col min-h-0 bg-white border-b border-slate-200 dark:border-slate-800 dark:bg-slate-900 xl:border-b-0 xl:border-r">
+                <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-slate-200 dark:border-slate-800">
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium truncate text-slate-700 dark:text-slate-200">{selectedExample.label}</p>
+                    <p className="text-xs truncate text-slate-500 dark:text-slate-400">Request editor</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="hidden rounded-full border border-slate-200 px-3 py-1.5 text-xs text-slate-500 dark:border-slate-700 dark:text-slate-300 md:inline-flex">
+                      {activeTab === 'form' ? 'Form Builder' : 'JSON Editor'}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleRun}
+                      disabled={loading}
+                      className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                    >
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M8 5v14l11-7-11-7z" />
+                      </svg>
+                      Run
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex-1 min-h-0 p-4 overflow-auto pro-scrollbar">
+                  {activeTab === 'form' ? (
+                    <ActionHandlerForm
+                      key={editorKey}
+                      ref={formRef}
+                      initialForm={selectedExample.form}
+                      onSubmit={handleFormSubmit}
+                      loading={loading}
+                    />
+                  ) : (
+                    <JsonEditor
+                      key={editorKey}
+                      ref={jsonRef}
+                      initialJson={selectedRequestJson}
+                      onSubmit={handleJsonSubmit}
+                      loading={loading}
+                    />
+                  )}
+                </div>
+              </div>
+
+              <div className="flex min-h-0 flex-col bg-[#fafafa] dark:bg-slate-950">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-slate-800">
+                  <div>
+                    <p className="text-sm font-medium text-slate-700 dark:text-slate-200">Output</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Simulated action handler response</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleClear}
+                    className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+                  >
+                    Clear
+                  </button>
+                </div>
+
+                <div className="flex-1 min-h-0 p-4 overflow-auto pro-scrollbar">
+                  <ResponseDisplay
+                    response={response}
+                    rawResponse={rawResponse}
+                    loading={loading}
+                    error={error}
+                  />
+                </div>
+              </div>
+            </section>
+          </main>
+        </div>
       </div>
     </div>
   )

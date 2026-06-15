@@ -16,6 +16,17 @@ function isTokenAction(type?: string) {
   return type === 'PRE_ISSUE_ACCESS_TOKEN' || type === 'PRE_ISSUE_ID_TOKEN'
 }
 
+const statusStyles: Record<'green' | 'red', { pill: string; dot: string }> = {
+  green: {
+    pill: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400',
+    dot: 'bg-green-500',
+  },
+  red: {
+    pill: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400',
+    dot: 'bg-red-500',
+  },
+}
+
 export default function ResponseDisplay({ response, rawResponse, loading, error }: Props) {
   const [expanded, setExpanded] = useState(true)
 
@@ -25,15 +36,13 @@ export default function ResponseDisplay({ response, rawResponse, loading, error 
     : response?.event?.request?.claims ? 'PRE_UPDATE_PROFILE'
     : undefined
 
-  const statusColor = response?.actionStatus === 'SUCCESS' ? 'green'
-    : response?.actionStatus === 'FAILED' ? 'red'
-    : response?.actionStatus === 'ERROR' ? 'red'
+  const statusTone = response?.actionStatus === 'FAILED' || response?.actionStatus === 'ERROR'
+    ? 'red'
     : 'green'
+  const styles = statusStyles[statusTone]
 
   return (
     <div className="h-full">
-      <h3 className="text-sm font-semibold mb-3 text-indigo-600 dark:text-indigo-400">Server Response</h3>
-
       {loading && (
         <div className="flex flex-col items-center justify-center py-16 text-gray-400">
           <svg className="animate-spin h-8 w-8 mb-3" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
@@ -46,7 +55,7 @@ export default function ResponseDisplay({ response, rawResponse, loading, error 
           <p className="text-sm font-medium text-red-700 dark:text-red-400 mb-1">Error</p>
           <pre className="text-xs text-red-600 dark:text-red-300 whitespace-pre-wrap font-mono">{error}</pre>
           {rawResponse && (
-            <pre className="mt-2 p-2 rounded bg-red-100 dark:bg-red-900/40 text-xs text-red-700 dark:text-red-300 overflow-auto max-h-40 font-mono">
+            <pre className="pro-scrollbar-thin mt-2 p-2 rounded bg-red-100 dark:bg-red-900/40 text-xs text-red-700 dark:text-red-300 overflow-auto max-h-40 font-mono">
               {rawResponse}
             </pre>
           )}
@@ -54,17 +63,17 @@ export default function ResponseDisplay({ response, rawResponse, loading, error 
       )}
 
       {!response && !loading && !error && (
-        <div className="flex flex-col items-center justify-center py-16 text-gray-400 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg">
+        <div className="flex flex-col items-center justify-center py-16 text-gray-400 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg h-full">
           <svg className="w-10 h-10 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-          <p className="text-sm">Build a request and send it to see the response here.</p>
+          <p className="text-sm">Build a request and run it to see the response here.</p>
         </div>
       )}
 
       {response && !loading && (
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-${statusColor}-100 dark:bg-${statusColor}-900/30 text-${statusColor}-700 dark:text-${statusColor}-400`}>
-              <span className={`w-1.5 h-1.5 rounded-full bg-${statusColor}-500`} />
+          <div className="flex items-center justify-between gap-3">
+            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium ${styles.pill}`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${styles.dot}`} />
               {response.actionStatus}
             </span>
             <div className="flex gap-2">
@@ -120,7 +129,7 @@ export default function ResponseDisplay({ response, rawResponse, loading, error 
             <div className="px-3 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-500 dark:text-gray-400">
               Response JSON
             </div>
-            <pre className="p-4 bg-gray-900 text-gray-100 text-xs leading-relaxed overflow-auto max-h-80 font-mono">
+            <pre className="pro-scrollbar-thin p-4 bg-gray-900 text-gray-100 text-xs leading-relaxed overflow-auto max-h-80 font-mono">
               {JSON.stringify(response, null, 2)}
             </pre>
           </div>
@@ -251,7 +260,7 @@ export default function ResponseDisplay({ response, rawResponse, loading, error 
             </div>
           )}
 
-          {expanded && response.event?.tenant && (
+          {response.event?.tenant && (
             <div className="rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
               <div className="px-3 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-500 dark:text-gray-400">
                 Tenant
@@ -264,7 +273,7 @@ export default function ResponseDisplay({ response, rawResponse, loading, error 
             </div>
           )}
 
-          {expanded && response.event?.request?.clientId && (
+          {response.event?.request?.clientId && (
             <div className="rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
               <div className="px-3 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-500 dark:text-gray-400">
                 Request Info

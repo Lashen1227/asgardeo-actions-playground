@@ -16,3 +16,81 @@ body {
     @apply antialiased;
   }
 }
+
+@layer components {
+  .pro-scrollbar {
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.7) transparent;
+  }
+
+  .dark .pro-scrollbar {
+    scrollbar-color: rgba(100, 116, 139, 0.9) transparent;
+  }
+
+  .pro-scrollbar::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  .pro-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .pro-scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+    background-color: rgba(148, 163, 184, 0.72);
+  }
+
+  .pro-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(100, 116, 139, 0.9);
+  }
+
+  .dark .pro-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(100, 116, 139, 0.9);
+  }
+
+  .dark .pro-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(148, 163, 184, 1);
+  }
+
+  .pro-scrollbar-thin {
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.65) transparent;
+  }
+
+  .dark .pro-scrollbar-thin {
+    scrollbar-color: rgba(71, 85, 105, 0.9) transparent;
+  }
+
+  .pro-scrollbar-thin::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .pro-scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .pro-scrollbar-thin::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+    background-color: rgba(148, 163, 184, 0.65);
+  }
+
+  .pro-scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(100, 116, 139, 0.85);
+  }
+
+  .dark .pro-scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(71, 85, 105, 0.95);
+  }
+
+  .dark .pro-scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(148, 163, 184, 0.95);
+  }
+}
