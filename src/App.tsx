@@ -25,7 +25,7 @@ const examples: ExamplePreset[] = [
   {
     id: 'access-token',
     label: 'pre-issue access token action',
-    description: 'Token claims and scopes',
+    description: 'Access token claims',
     form: defaultFormState,
   },
   {
@@ -66,7 +66,7 @@ function App() {
   const [rawResponse, setRawResponse] = useState<string>('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [dark, setDark] = useState(true)
+  const [dark, setDark] = useState(false)
 
   const formRef = useRef<ActionHandlerFormHandle>(null)
   const jsonRef = useRef<JsonEditorHandle>(null)
