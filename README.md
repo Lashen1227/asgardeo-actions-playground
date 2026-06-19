@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/Lashen1227/asgardeo-actions-playground/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Lashen1227/asgardeo-actions-playground/actions/workflows/ci.yml)
 
-WSO2 Identity Platform, previously known as Asgardeo, is a web app for building and testing action handler payloads in the browser. It is hosted at [https://asgardeo-actions-playground.onrender.com](https://asgardeo-actions-playground.onrender.com) and documented at [https://wso2.com/asgardeo/docs](https://wso2.com/asgardeo/docs).
+This playground implemted for WSO2 Identity Platform (previously known as Asgardeo), is a web app for building and testing action handler payloads in the browser. It is hosted at [https://asgardeo-actions-playground.onrender.com](https://asgardeo-actions-playground.onrender.com) and for more details about Identity Platform refer [https://wso2.com/asgardeo/docs](https://wso2.com/asgardeo/docs).
 
 ## Getting started
 
