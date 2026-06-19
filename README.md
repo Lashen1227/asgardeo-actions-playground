@@ -1,50 +1,40 @@
-# Asgardeo Actions Playground
+# WSO2 Asgardeo Actions Playground
 
-A standalone React + TypeScript UI for building, editing, and testing Asgardeo action handler payloads. Processes everything client-side — no backend required.
+WSO2 Identity Platform, previously known as Asgardeo, is a web app for building and testing action handler payloads in the browser. It is hosted at [https://asgardeo-actions-playground.onrender.com](https://asgardeo-actions-playground.onrender.com) and documented at [https://wso2.com/asgardeo/docs](https://wso2.com/asgardeo/docs).
 
-## Features
+## Getting started
 
-- **Form Builder** — Structured form with dynamic claims management
-- **JSON Editor** — Raw JSON editor with Format/Minify and validation
-- **Response Viewer** — Collapsible JSON, access token breakdown (scopes chips, claims list, tenant info)
-- **Dark/Light Mode** — Toggle with a single click
-- **Copy to Clipboard** — One-click copy of response JSON
-- **Live Request Preview** — See the exact JSON payload before processing
+### Prerequisites
 
-## Quick Start
+- Node.js 18 or later
+- npm
+
+### Install dependencies
+
+From the repository root:
 
 ```bash
 npm install
+```
+
+## Code structure
+
+- `src/`: React + TypeScript app source
+- `e2e/`: Playwright end-to-end tests
+- `public/`: Static assets
+
+## Development
+
+Run the app in development mode from the repository root:
+
+```bash
 npm run dev
 ```
 
-Open **http://localhost:3000**.
+### Useful scripts
 
-## How It Works
-
-The playground simulates the Ballerina server logic locally via `processRequest()` in `src/types.ts`:
-
-1. Deep-clones the input event
-2. Applies `allowedOperations` (add/remove claims and scopes based on path rules)
-3. Returns the modified event as the response
-
-No fetch calls, no server dependency.
-
-## Scripts
-
-| Command | Description |
-|---|---|
-| `npm run dev` | Start Vite dev server on port 3000 |
-| `npm run build` | Production build to `dist/` |
-| `npm run preview` | Preview the production build |
-| `npm run typecheck` | Run TypeScript type checking |
-| `npm run lint` | Run ESLint |
-
-## Types
-
-Types in `src/types.ts` mirror the Ballerina record types from the server (`server/types.bal`):
-
-- `ActionHandlerRequest` / `ActionHandlerResponse`
-- `Event`, `AccessToken`, `Claim`, `RequestDetails`
-- `User`, `Organization`, `Tenant`
-- `FormState` and `buildRequest()` helper
+- `npm run build` - Create a production build
+- `npm run preview` - Preview the production build
+- `npm run typecheck` - Run TypeScript checks
+- `npm run lint` - Run ESLint
+- `npm run e2e` - Run Playwright tests
