@@ -118,6 +118,7 @@ const ActionHandlerForm = forwardRef<ActionHandlerFormHandle, Props>(function Ac
       <div className={sectionClass}>
         <label className={labelClass}>Action Type</label>
         <select
+          data-testid="action-type-select"
           name="actionType"
           value={form.actionType}
           onChange={e => {
@@ -216,7 +217,7 @@ const ActionHandlerForm = forwardRef<ActionHandlerFormHandle, Props>(function Ac
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className={labelClass}>Claims</label>
-                <button type="button" onClick={() => addClaim('claims')} className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
+                <button type="button" data-testid="add-access-token-claim" onClick={() => addClaim('claims')} className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
                   + Add Claim
                 </button>
               </div>
@@ -246,7 +247,7 @@ const ActionHandlerForm = forwardRef<ActionHandlerFormHandle, Props>(function Ac
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className={labelClass}>Claims</label>
-                <button type="button" onClick={() => addClaim('idTokenClaims')} className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
+                <button type="button" data-testid="add-id-token-claim" onClick={() => addClaim('idTokenClaims')} className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
                   + Add Claim
                 </button>
               </div>
@@ -326,7 +327,7 @@ const ActionHandlerForm = forwardRef<ActionHandlerFormHandle, Props>(function Ac
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className={labelClass}>Profile Claims</label>
-                <button type="button" onClick={addProfileClaim} className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
+                <button type="button" data-testid="add-profile-claim" onClick={addProfileClaim} className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
                   + Add Profile Claim
                 </button>
               </div>
