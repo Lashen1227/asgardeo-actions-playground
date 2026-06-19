@@ -12,7 +12,7 @@ export default function Header({ dark, onToggleTheme }: Props) {
         <div className="flex items-center gap-3">
           <div>
             <h1 className="text-sm font-semibold tracking-wide sm:text-base">Asgardeo Actions Playground</h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400">Client-side request builder and response simulator</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">WSO2 Identity Platform</p>
           </div>
         </div>
 
