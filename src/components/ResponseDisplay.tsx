@@ -72,7 +72,7 @@ export default function ResponseDisplay({ response, rawResponse, loading, error 
       {response && !loading && (
         <div className="space-y-4">
           <div className="flex items-center justify-between gap-3">
-            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium ${styles.pill}`}>
+            <span data-testid="response-status" className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium ${styles.pill}`}>
               <span className={`w-1.5 h-1.5 rounded-full ${styles.dot}`} />
               {response.actionStatus}
             </span>
@@ -129,7 +129,7 @@ export default function ResponseDisplay({ response, rawResponse, loading, error 
             <div className="px-3 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-500 dark:text-gray-400">
               Response JSON
             </div>
-            <pre className="pro-scrollbar-thin p-4 bg-gray-900 text-gray-100 text-xs leading-relaxed overflow-auto max-h-80 font-mono">
+            <pre data-testid="response-json" className="pro-scrollbar-thin p-4 bg-gray-900 text-gray-100 text-xs leading-relaxed overflow-auto max-h-80 font-mono">
               {JSON.stringify(response, null, 2)}
             </pre>
           </div>
