@@ -66,7 +66,6 @@ function App() {
   const [rawResponse, setRawResponse] = useState<string>('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [dark, setDark] = useState(false)
 
   const formRef = useRef<ActionHandlerFormHandle>(null)
   const jsonRef = useRef<JsonEditorHandle>(null)
@@ -134,135 +133,133 @@ function App() {
   const editorKey = `${selectedExample.id}-${activeTab}`
 
   return (
-    <div className={dark ? 'dark' : ''}>
-      <div className="min-h-screen bg-[#f5f5f2] text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors">
-        <div className="mx-auto flex min-h-screen max-w-[1920px] flex-col">
-          <Header dark={dark} onToggleTheme={() => setDark(value => !value)} />
+    <div className="min-h-screen bg-[#f5f5f2] text-slate-900 transition-colors">
+      <div className="mx-auto flex min-h-screen max-w-[1920px] flex-col">
+        <Header />
 
-          <main className="grid flex-1 grid-cols-1 overflow-hidden xl:grid-cols-[19rem_minmax(0,1fr)]">
-            <aside className="flex flex-col h-full bg-white border-b border-slate-200 dark:border-slate-800 dark:bg-slate-900 xl:border-b-0 xl:border-r">
-              <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-800">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Examples</p>
-              </div>
+        <main className="grid flex-1 grid-cols-1 overflow-hidden xl:grid-cols-[19rem_minmax(0,1fr)]">
+          <aside className="flex flex-col h-full bg-white border-b border-slate-200 xl:border-b-0 xl:border-r">
+            <div className="px-4 py-3 border-b border-slate-200">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Examples</p>
+            </div>
 
-              <div className="flex-1 p-2 overflow-auto pro-scrollbar">
-                <div className="space-y-1">
-                  {examples.map(example => {
-                    const selected = example.id === selectedExampleId
-                    return (
-                      <button
-                        key={example.id}
-                        type="button"
-                        onClick={() => {
-                          setSelectedExampleId(example.id)
-                          setError(null)
-                        }}
-                        className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition ${
-                          selected
-                            ? 'bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-white'
-                            : 'text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800/60'
-                        }`}
-                      >
-                        <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M7 7h10M7 12h10M7 17h6" />
-                        </svg>
-                        <span className="flex-1 min-w-0">
-                          <span className="block text-sm font-medium truncate">{example.label}</span>
-                          <span className="block truncate text-[11px] text-slate-400">{example.description}</span>
-                        </span>
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
-
-              <div className="p-4 border-t border-slate-200 dark:border-slate-800">
-                <div className="flex items-center justify-between">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Workspace</p>
-                  <button
-                    type="button"
-                    className="px-2 py-1 text-xs border rounded-md border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
-                    onClick={() => setActiveTab(tab => tab === 'form' ? 'json' : 'form')}
-                  >
-                    {activeTab === 'form' ? 'JSON' : 'Form'}
-                  </button>
-                </div>
-              </div>
-            </aside>
-
-            <section className="grid min-h-0 grid-cols-1 overflow-hidden xl:grid-cols-[minmax(0,1.05fr)_minmax(24rem,0.95fr)]">
-              <div className="flex flex-col min-h-0 bg-white border-b border-slate-200 dark:border-slate-800 dark:bg-slate-900 xl:border-b-0 xl:border-r">
-                <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-slate-200 dark:border-slate-800">
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium truncate text-slate-700 dark:text-slate-200">{selectedExample.label}</p>
-                    <p className="text-xs truncate text-slate-500 dark:text-slate-400">Request editor</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="hidden rounded-full border border-slate-200 px-3 py-1.5 text-xs text-slate-500 dark:border-slate-700 dark:text-slate-300 md:inline-flex">
-                      {activeTab === 'form' ? 'Form Builder' : 'JSON Editor'}
-                    </div>
+            <div className="flex-1 p-2 overflow-auto pro-scrollbar">
+              <div className="space-y-1">
+                {examples.map(example => {
+                  const selected = example.id === selectedExampleId
+                  return (
                     <button
+                      key={example.id}
                       type="button"
-                      onClick={handleRun}
-                      disabled={loading}
-                      className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                      onClick={() => {
+                        setSelectedExampleId(example.id)
+                        setError(null)
+                      }}
+                      className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition ${
+                        selected
+                          ? 'bg-slate-100 text-slate-900'
+                          : 'text-slate-600 hover:bg-slate-50'
+                      }`}
                     >
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M8 5v14l11-7-11-7z" />
+                      <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M7 7h10M7 12h10M7 17h6" />
                       </svg>
-                      Run
+                      <span className="flex-1 min-w-0">
+                        <span className="block text-sm font-medium truncate">{example.label}</span>
+                        <span className="block truncate text-[11px] text-slate-400">{example.description}</span>
+                      </span>
                     </button>
-                  </div>
-                </div>
-
-                <div className="flex-1 min-h-0 p-4 overflow-auto pro-scrollbar">
-                  {activeTab === 'form' ? (
-                    <ActionHandlerForm
-                      key={editorKey}
-                      ref={formRef}
-                      initialForm={selectedExample.form}
-                      onSubmit={handleFormSubmit}
-                      loading={loading}
-                    />
-                  ) : (
-                    <JsonEditor
-                      key={editorKey}
-                      ref={jsonRef}
-                      initialJson={selectedRequestJson}
-                      onSubmit={handleJsonSubmit}
-                      loading={loading}
-                    />
-                  )}
-                </div>
+                  )
+                })}
               </div>
+            </div>
 
-              <div className="flex min-h-0 flex-col bg-[#fafafa] dark:bg-slate-950">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-slate-800">
-                  <div>
-                    <p className="text-sm font-medium text-slate-700 dark:text-slate-200">Output</p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">Simulated action handler response</p>
+            <div className="p-4 border-t border-slate-200">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Workspace</p>
+                <button
+                  type="button"
+                  className="px-2 py-1 text-xs border rounded-md border-slate-200 text-slate-600 hover:bg-slate-50"
+                  onClick={() => setActiveTab(tab => tab === 'form' ? 'json' : 'form')}
+                >
+                  {activeTab === 'form' ? 'JSON' : 'Form'}
+                </button>
+              </div>
+            </div>
+          </aside>
+
+          <section className="grid min-h-0 grid-cols-1 overflow-hidden xl:grid-cols-[minmax(0,1.05fr)_minmax(24rem,0.95fr)]">
+            <div className="flex flex-col min-h-0 bg-white border-b border-slate-200 xl:border-b-0 xl:border-r">
+              <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-slate-200">
+                <div className="min-w-0">
+                  <p className="text-sm font-medium truncate text-slate-700">{selectedExample.label}</p>
+                  <p className="text-xs truncate text-slate-500">Request editor</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="hidden rounded-full border border-slate-200 px-3 py-1.5 text-xs text-slate-500 md:inline-flex">
+                    {activeTab === 'form' ? 'Form Builder' : 'JSON Editor'}
                   </div>
                   <button
                     type="button"
-                    onClick={handleClear}
-                    className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+                    onClick={handleRun}
+                    disabled={loading}
+                    className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-60"
                   >
-                    Clear
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M8 5v14l11-7-11-7z" />
+                    </svg>
+                    Run
                   </button>
                 </div>
-
-                <div className="flex-1 min-h-0 p-4 overflow-auto pro-scrollbar">
-                  <ResponseDisplay
-                    response={response}
-                    rawResponse={rawResponse}
-                    loading={loading}
-                    error={error}
-                  />
-                </div>
               </div>
-            </section>
-          </main>
-        </div>
+
+              <div className="flex-1 min-h-0 p-4 overflow-auto pro-scrollbar">
+                {activeTab === 'form' ? (
+                  <ActionHandlerForm
+                    key={editorKey}
+                    ref={formRef}
+                    initialForm={selectedExample.form}
+                    onSubmit={handleFormSubmit}
+                    loading={loading}
+                  />
+                ) : (
+                  <JsonEditor
+                    key={editorKey}
+                    ref={jsonRef}
+                    initialJson={selectedRequestJson}
+                    onSubmit={handleJsonSubmit}
+                    loading={loading}
+                  />
+                )}
+              </div>
+            </div>
+
+            <div className="flex min-h-0 flex-col bg-[#fafafa]">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200">
+                <div>
+                  <p className="text-sm font-medium text-slate-700">Output</p>
+                  <p className="text-xs text-slate-500">Simulated action handler response</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleClear}
+                  className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+                >
+                  Clear
+                </button>
+              </div>
+
+              <div className="flex-1 min-h-0 p-4 overflow-auto pro-scrollbar">
+                <ResponseDisplay
+                  response={response}
+                  rawResponse={rawResponse}
+                  loading={loading}
+                  error={error}
+                />
+              </div>
+            </div>
+          </section>
+        </main>
       </div>
     </div>
   )

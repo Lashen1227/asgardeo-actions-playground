@@ -12,7 +12,7 @@ export interface JsonEditorHandle {
   reset: () => void
 }
 
-const textareaClass = 'w-full min-h-[34rem] px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-mono text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition resize-none'
+const textareaClass = 'w-full min-h-[34rem] px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-900 font-mono text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition resize-none'
 
 const JsonEditor = forwardRef<JsonEditorHandle, Props>(function JsonEditor(
   { onSubmit, loading, initialJson },
@@ -66,26 +66,26 @@ const JsonEditor = forwardRef<JsonEditorHandle, Props>(function JsonEditor(
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
-        <h3 className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">JSON Editor</h3>
+        <h3 className="text-sm font-semibold text-indigo-600">JSON Editor</h3>
         <div className="flex gap-2">
           <button
             type="button"
             onClick={reset}
-            className="px-3 py-1.5 text-xs font-medium border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
+            className="px-3 py-1.5 text-xs font-medium border border-gray-300 text-gray-600 hover:bg-gray-100 rounded-lg transition"
           >
             Reset
           </button>
           <button
             type="button"
             onClick={format}
-            className="px-3 py-1.5 text-xs font-medium border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
+            className="px-3 py-1.5 text-xs font-medium border border-gray-300 text-gray-600 hover:bg-gray-100 rounded-lg transition"
           >
             Format
           </button>
           <button
             type="button"
             onClick={minify}
-            className="px-3 py-1.5 text-xs font-medium border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
+            className="px-3 py-1.5 text-xs font-medium border border-gray-300 text-gray-600 hover:bg-gray-100 rounded-lg transition"
           >
             Minify
           </button>
@@ -100,7 +100,7 @@ const JsonEditor = forwardRef<JsonEditorHandle, Props>(function JsonEditor(
       />
 
       {error && (
-        <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 text-xs">
+        <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs">
           {error}
         </div>
       )}

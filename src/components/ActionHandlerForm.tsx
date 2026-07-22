@@ -12,10 +12,10 @@ export interface ActionHandlerFormHandle {
   reset: () => void
 }
 
-const inputClass = 'w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition text-sm'
-const selectClass = 'w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition text-sm'
-const labelClass = 'block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider'
-const sectionClass = 'p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50'
+const inputClass = 'w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition text-sm'
+const selectClass = 'w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition text-sm'
+const labelClass = 'block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wider'
+const sectionClass = 'p-4 rounded-lg border border-gray-200 bg-gray-50'
 
 function isTokenAction(type: string) {
   return type === 'PRE_ISSUE_ACCESS_TOKEN' || type === 'PRE_ISSUE_ID_TOKEN'
@@ -135,7 +135,7 @@ const ActionHandlerForm = forwardRef<ActionHandlerFormHandle, Props>(function Ac
 
       {isTokenAction(form.actionType) && (
         <div className={sectionClass}>
-          <h3 className="text-sm font-semibold mb-3 text-indigo-600 dark:text-indigo-400">Request Details</h3>
+          <h3 className="text-sm font-semibold mb-3 text-indigo-600">Request Details</h3>
           <div className="space-y-3">
             <div>
               <label className={labelClass}>Client ID</label>
@@ -160,7 +160,7 @@ const ActionHandlerForm = forwardRef<ActionHandlerFormHandle, Props>(function Ac
       )}
 
       <div className={sectionClass}>
-        <h3 className="text-sm font-semibold mb-3 text-indigo-600 dark:text-indigo-400">User Information</h3>
+        <h3 className="text-sm font-semibold mb-3 text-indigo-600">User Information</h3>
         <div className="space-y-3">
           <div>
             <label className={labelClass}>User ID</label>
@@ -189,7 +189,7 @@ const ActionHandlerForm = forwardRef<ActionHandlerFormHandle, Props>(function Ac
       </div>
 
       <div className={sectionClass}>
-        <h3 className="text-sm font-semibold mb-3 text-indigo-600 dark:text-indigo-400">Tenant Information</h3>
+        <h3 className="text-sm font-semibold mb-3 text-indigo-600">Tenant Information</h3>
         <div className="space-y-3">
           <div>
             <label className={labelClass}>Tenant ID</label>
@@ -204,7 +204,7 @@ const ActionHandlerForm = forwardRef<ActionHandlerFormHandle, Props>(function Ac
 
       {form.actionType === 'PRE_ISSUE_ACCESS_TOKEN' && (
         <div className={sectionClass}>
-          <h3 className="text-sm font-semibold mb-3 text-indigo-600 dark:text-indigo-400">Access Token</h3>
+          <h3 className="text-sm font-semibold mb-3 text-indigo-600">Access Token</h3>
           <div className="space-y-3">
             <div>
               <label className={labelClass}>Token Type</label>
@@ -217,7 +217,7 @@ const ActionHandlerForm = forwardRef<ActionHandlerFormHandle, Props>(function Ac
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className={labelClass}>Claims</label>
-                <button type="button" data-testid="add-access-token-claim" onClick={() => addClaim('claims')} className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
+                <button type="button" data-testid="add-access-token-claim" onClick={() => addClaim('claims')} className="text-xs text-indigo-600 hover:underline font-medium">
                   + Add Claim
                 </button>
               </div>
@@ -229,7 +229,7 @@ const ActionHandlerForm = forwardRef<ActionHandlerFormHandle, Props>(function Ac
                   <div key={i} className="flex gap-2 items-start">
                     <input value={claim.name} onChange={e => updateClaim('claims', i, 'name', e.target.value)} className={`${inputClass} flex-1`} placeholder="Claim name" />
                     <input value={String(claim.value)} onChange={e => updateClaim('claims', i, 'value', e.target.value)} className={`${inputClass} flex-1`} placeholder="Value" />
-                    <button type="button" onClick={() => removeClaim('claims', i)} className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition" title="Remove claim">
+                    <button type="button" onClick={() => removeClaim('claims', i)} className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition" title="Remove claim">
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                     </button>
                   </div>
@@ -242,12 +242,12 @@ const ActionHandlerForm = forwardRef<ActionHandlerFormHandle, Props>(function Ac
 
       {form.actionType === 'PRE_ISSUE_ID_TOKEN' && (
         <div className={sectionClass}>
-          <h3 className="text-sm font-semibold mb-3 text-indigo-600 dark:text-indigo-400">ID Token</h3>
+          <h3 className="text-sm font-semibold mb-3 text-indigo-600">ID Token</h3>
           <div className="space-y-3">
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className={labelClass}>Claims</label>
-                <button type="button" data-testid="add-id-token-claim" onClick={() => addClaim('idTokenClaims')} className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
+                <button type="button" data-testid="add-id-token-claim" onClick={() => addClaim('idTokenClaims')} className="text-xs text-indigo-600 hover:underline font-medium">
                   + Add Claim
                 </button>
               </div>
@@ -259,7 +259,7 @@ const ActionHandlerForm = forwardRef<ActionHandlerFormHandle, Props>(function Ac
                   <div key={i} className="flex gap-2 items-start">
                     <input value={claim.name} onChange={e => updateClaim('idTokenClaims', i, 'name', e.target.value)} className={`${inputClass} flex-1`} placeholder="Claim name" />
                     <input value={String(claim.value)} onChange={e => updateClaim('idTokenClaims', i, 'value', e.target.value)} className={`${inputClass} flex-1`} placeholder="Value" />
-                    <button type="button" onClick={() => removeClaim('idTokenClaims', i)} className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition" title="Remove claim">
+                    <button type="button" onClick={() => removeClaim('idTokenClaims', i)} className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition" title="Remove claim">
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                     </button>
                   </div>
@@ -272,7 +272,7 @@ const ActionHandlerForm = forwardRef<ActionHandlerFormHandle, Props>(function Ac
 
       {isPasswordAction(form.actionType) && (
         <div className={sectionClass}>
-          <h3 className="text-sm font-semibold mb-3 text-indigo-600 dark:text-indigo-400">Password Update</h3>
+          <h3 className="text-sm font-semibold mb-3 text-indigo-600">Password Update</h3>
           <div className="space-y-3">
             <div>
               <label className={labelClass}>Initiator Type</label>
@@ -314,7 +314,7 @@ const ActionHandlerForm = forwardRef<ActionHandlerFormHandle, Props>(function Ac
 
       {isProfileAction(form.actionType) && (
         <div className={sectionClass}>
-          <h3 className="text-sm font-semibold mb-3 text-indigo-600 dark:text-indigo-400">Profile Update</h3>
+          <h3 className="text-sm font-semibold mb-3 text-indigo-600">Profile Update</h3>
           <div className="space-y-3">
             <div>
               <label className={labelClass}>Initiator Type</label>
@@ -327,7 +327,7 @@ const ActionHandlerForm = forwardRef<ActionHandlerFormHandle, Props>(function Ac
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className={labelClass}>Profile Claims</label>
-                <button type="button" data-testid="add-profile-claim" onClick={addProfileClaim} className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
+                <button type="button" data-testid="add-profile-claim" onClick={addProfileClaim} className="text-xs text-indigo-600 hover:underline font-medium">
                   + Add Profile Claim
                 </button>
               </div>
@@ -336,12 +336,12 @@ const ActionHandlerForm = forwardRef<ActionHandlerFormHandle, Props>(function Ac
               )}
               <div className="space-y-3">
                 {form.profileClaims.map((pc, i) => (
-                  <div key={i} className="p-3 rounded bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 space-y-2">
+                  <div key={i} className="p-3 rounded bg-white border border-gray-200 space-y-2">
                     <input value={pc.uri} onChange={e => updateProfileClaim(i, 'uri', e.target.value)} className={`${inputClass} text-xs`} placeholder="http://wso2.org/claims/emailAddresses" />
                     <div className="flex gap-2">
                       <input value={Array.isArray(pc.value) ? pc.value.join(', ') : String(pc.value)} onChange={e => updateProfileClaim(i, 'value', e.target.value)} className={`${inputClass} flex-1 text-xs`} placeholder="Current value(s)" />
                       <input value={Array.isArray(pc.updatingValue) ? pc.updatingValue.join(', ') : String(pc.updatingValue || '')} onChange={e => updateProfileClaim(i, 'updatingValue', e.target.value)} className={`${inputClass} flex-1 text-xs`} placeholder="New value(s)" />
-                      <button type="button" onClick={() => removeProfileClaim(i)} className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition shrink-0" title="Remove">
+                      <button type="button" onClick={() => removeProfileClaim(i)} className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition shrink-0" title="Remove">
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                       </button>
                     </div>
@@ -369,14 +369,14 @@ const ActionHandlerForm = forwardRef<ActionHandlerFormHandle, Props>(function Ac
         <button
           type="button"
           onClick={reset}
-          className="px-4 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium rounded-lg transition text-sm"
+          className="px-4 py-2.5 border border-gray-300 text-gray-700 hover:bg-gray-100 font-medium rounded-lg transition text-sm"
         >
           Reset
         </button>
       </div>
 
       <details className="group">
-        <summary className="cursor-pointer text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 select-none">
+        <summary className="cursor-pointer text-xs font-medium text-gray-500 hover:text-gray-700 select-none">
           <span className="group-open:hidden">{'>'}</span>
           <span className="hidden group-open:inline">{'v'}</span>
           {' '}Request Preview

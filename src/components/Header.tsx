@@ -1,36 +1,20 @@
-import { MoonIcon, SunIcon } from '@heroicons/react/24/outline'
-
-interface Props {
-  dark: boolean
-  onToggleTheme: () => void
-}
-
-export default function Header({ dark, onToggleTheme }: Props) {
+export default function Header() {
   return (
-    <header className="border-b border-slate-200/80 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-900/90">
+    <header className="border-b border-slate-200/80 bg-white/90 backdrop-blur">
       <div className="flex items-center justify-between px-4 py-3 sm:px-6">
         <div className="flex items-center gap-3">
           <div>
             <h1 className="text-sm font-semibold tracking-wide sm:text-base">Asgardeo Actions Playground</h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400">WSO2 Identity Platform</p>
+            <p className="text-xs text-slate-500">WSO2 Identity Platform</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-          <button
-            type="button"
-            onClick={onToggleTheme}
-            className="rounded-lg border border-slate-200 px-3 py-1.5 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
-            title="Toggle theme"
-          >
-            <span className="sr-only">{dark ? 'Switch to light mode' : 'Switch to dark mode'}</span>
-            {dark ? <SunIcon className="w-4 h-4" aria-hidden="true" /> : <MoonIcon className="w-4 h-4" aria-hidden="true" />}
-          </button>
+        <div className="flex items-center gap-2 text-xs text-slate-500">
           <a
             href="https://github.com/Lashen1227/asgardeo-actions-playground"
             target="_blank"
             rel="noreferrer"
-            className="hidden items-center gap-2 rounded-lg border border-slate-200 px-3 py-1.5 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800 md:inline-flex"
+            className="hidden items-center gap-2 rounded-lg border border-slate-200 px-3 py-1.5 text-slate-700 hover:bg-slate-100 md:inline-flex"
             aria-label="Open GitHub repository"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
