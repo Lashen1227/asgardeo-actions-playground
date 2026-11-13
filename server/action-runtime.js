@@ -149,6 +149,15 @@ async function handle(req, res) {
     saveStore(store)
     return json(res, 201, { endpoint: saved })
   }
+  const rotateMatch = url.pathname.match(/^\/api\/endpoints\/([a-z0-9-]+)\/rotate-token$/)
+  if (rotateMatch && req.method === 'POST') {
+    const endpoint = store.endpoints.find(item => item.slug === rotateMatch[1])
+    if (!endpoint) return json(res, 404, { error: 'Endpoint not found.' })
+    endpoint.endpointKey = randomBytes(32).toString('base64url')
+    endpoint.updatedAt = new Date().toISOString()
+    saveStore(store)
+    return json(res, 200, { endpoint })
+  }
   const endpointMatch = url.pathname.match(/^\/api\/endpoints\/([a-z0-9-]+)$/)
   if (endpointMatch && req.method === 'PUT') {
     let endpoint
