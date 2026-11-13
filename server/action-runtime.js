@@ -171,6 +171,7 @@ async function handle(req, res) {
     return json(res, 200, { endpoint: store.endpoints[index] })
   }
   if (endpointMatch && req.method === 'DELETE') {
+    if (!store.endpoints.some(item => item.slug === endpointMatch[1])) return json(res, 404, { error: 'Endpoint not found.' })
     store.endpoints = store.endpoints.filter(item => item.slug !== endpointMatch[1])
     store.requests = store.requests.filter(item => item.endpointSlug !== endpointMatch[1])
     saveStore(store)
