@@ -1,5 +1,5 @@
 import { createServer } from 'node:http'
-import { createReadStream, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { createReadStream, existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
 import { dirname, extname, join, normalize, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { createHash, randomBytes, randomUUID, timingSafeEqual } from 'node:crypto'
@@ -27,7 +27,7 @@ function readStore() {
 function saveStore(store) {
   const temp = `${configPath}.tmp`
   writeFileSync(temp, JSON.stringify(store, null, 2), { mode: 0o600 })
-  writeFileSync(configPath, readFileSync(temp), { mode: 0o600 })
+  renameSync(temp, configPath)
 }
 
 function json(res, status, payload) {
