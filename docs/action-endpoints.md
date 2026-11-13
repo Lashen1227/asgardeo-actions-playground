@@ -1,8 +1,8 @@
 # Action endpoint contract
 
-Each endpoint accepts `POST /actions/<slug>` with a JSON body containing the configured `actionType` and an `event` object. Send the endpoint's generated token as `Authorization: Bearer <token>`.
+Each endpoint accepts `POST /actions/<slug>` with `Content-Type: application/json` and a JSON body containing the configured `actionType` and an `event` object. Send the endpoint's generated token as `Authorization: Bearer <token>`.
 
-The action type must match the endpoint configuration. Requests with a mismatched type or missing event receive HTTP 400. Missing or invalid Bearer tokens receive HTTP 401. The runtime rejects request bodies larger than 1 MB.
+The action type must match the endpoint configuration. Requests with a mismatched type or missing event receive HTTP 400. Missing or invalid Bearer tokens receive HTTP 401. Other content types receive HTTP 415. The runtime rejects request bodies larger than 1 MB.
 
 ## Response modes
 

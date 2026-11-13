@@ -182,6 +182,9 @@ async function handle(req, res) {
     const endpoint = store.endpoints.find(item => item.slug === actionMatch[1])
     if (!endpoint || !endpoint.enabled) return json(res, 404, { error: 'Action endpoint not found or disabled.' })
     if (!endpoint.endpointKey || !tokenMatches(req.headers.authorization, endpoint.endpointKey)) return json(res, 401, { error: 'A valid Bearer token is required for this action endpoint.' })
+    if (!/^application\/json(?:\s*;|$)/i.test(req.headers['content-type'] || '')) {
+      return json(res, 415, { actionStatus: 'ERROR', errorMessage: 'unsupported_media_type', errorDescription: 'Content-Type must be application/json.' })
+    }
     const started = Date.now()
     let request
     try { request = await readBody(req) } catch (error) {
