@@ -5,7 +5,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "node server/dev.js",
+    "start": "node server/action-runtime.js",
     "build": "vite build",
     "preview": "vite preview",
     "e2e": "playwright test -c e2e/playwright.config.ts",
