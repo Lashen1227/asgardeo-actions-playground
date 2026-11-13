@@ -11,6 +11,7 @@ import ActionHandlerForm, { ActionHandlerFormHandle } from './components/ActionH
 import Header from './components/Header'
 import JsonEditor, { JsonEditorHandle } from './components/JsonEditor'
 import ResponseDisplay from './components/ResponseDisplay'
+import PlatformDashboard from './components/PlatformDashboard'
 
 type Tab = 'form' | 'json'
 
@@ -60,6 +61,7 @@ const examples: ExamplePreset[] = [
 ]
 
 function App() {
+  const [platformOpen, setPlatformOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<Tab>('json')
   const [selectedExampleId, setSelectedExampleId] = useState(examples[0].id)
   const [response, setResponse] = useState<ActionHandlerResponse | null>(null)
@@ -132,10 +134,14 @@ function App() {
 
   const editorKey = `${selectedExample.id}-${activeTab}`
 
+  if (platformOpen) {
+    return <PlatformDashboard onBackToPlayground={() => setPlatformOpen(false)} />
+  }
+
   return (
     <div className="min-h-screen bg-[#f5f5f2] text-slate-900 transition-colors">
       <div className="mx-auto flex min-h-screen max-w-[1920px] flex-col">
-        <Header />
+        <Header onOpenPlatform={() => setPlatformOpen(true)} />
 
         <main className="grid flex-1 grid-cols-1 overflow-hidden xl:grid-cols-[19rem_minmax(0,1fr)]">
           <aside className="flex flex-col h-full bg-white border-b border-slate-200 xl:border-b-0 xl:border-r">
@@ -175,15 +181,16 @@ function App() {
             </div>
 
             <div className="p-4 border-t border-slate-200">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-2">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Workspace</p>
-                <button
-                  type="button"
-                  className="px-2 py-1 text-xs border rounded-md border-slate-200 text-slate-600 hover:bg-slate-50"
-                  onClick={() => setActiveTab(tab => tab === 'form' ? 'json' : 'form')}
-                >
-                  {activeTab === 'form' ? 'JSON' : 'Form'}
-                </button>
+                <div className="flex gap-1">
+                  <button type="button" className="px-2 py-1 text-xs border rounded-md border-slate-200 text-slate-600 hover:bg-slate-50" onClick={() => setActiveTab(tab => tab === 'form' ? 'json' : 'form')}>
+                    {activeTab === 'form' ? 'JSON' : 'Form'}
+                  </button>
+                  <button type="button" className="px-2 py-1 text-xs border rounded-md border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100" onClick={() => setPlatformOpen(true)}>
+                    Platform
+                  </button>
+                </div>
               </div>
             </div>
           </aside>
