@@ -3,12 +3,13 @@ import { createReadStream, existsSync, mkdirSync, readFileSync, renameSync, writ
 import { dirname, extname, join, normalize, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { createHash, randomBytes, randomUUID, timingSafeEqual } from 'node:crypto'
+import { runtimePort } from './config.js'
 
 const root = dirname(fileURLToPath(import.meta.url))
 const dataDir = join(root, 'data')
 const configPath = join(dataDir, 'platform.json')
 const distDir = join(root, '..', 'dist')
-const port = Number(process.env.PORT || 3001)
+const port = runtimePort
 const maxBodyBytes = 1024 * 1024
 const logLimit = 200
 
