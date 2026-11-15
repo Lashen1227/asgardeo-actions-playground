@@ -17,4 +17,4 @@ curl --request POST \
   }'
 ```
 
-The response body reports the configured `actionStatus`. Successful requests also appear in the dashboard history with sensitive values redacted.
+Built-in success, failed, and error modes return their corresponding `actionStatus`. Custom mode returns the configured JSON with `requestId`; it includes `actionStatus` only when that field is present in the configured JSON. Successful requests also appear in the dashboard history with sensitive values redacted.
