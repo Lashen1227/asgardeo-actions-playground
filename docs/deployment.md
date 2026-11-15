@@ -1,6 +1,6 @@
 # Self-hosting
 
-Use Node.js 18 or later. Build the React dashboard and start the runtime:
+Use Node.js `^20.19.0` or `>=22.12.0`, as required by Vite 8. Build the React dashboard and start the runtime:
 
 ```bash
 npm install
