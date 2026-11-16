@@ -1,4 +1,8 @@
-export default function Header() {
+interface Props {
+  onOpenPlatform: () => void
+}
+
+export default function Header({ onOpenPlatform }: Props) {
   return (
     <header className="border-b border-slate-200/80 bg-white/90 backdrop-blur">
       <div className="flex items-center justify-between px-4 py-3 sm:px-6">
@@ -10,6 +14,13 @@ export default function Header() {
         </div>
 
         <div className="flex items-center gap-2 text-xs text-slate-500">
+          <button
+            type="button"
+            onClick={onOpenPlatform}
+            className="inline-flex items-center gap-2 rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-1.5 text-indigo-700 hover:bg-indigo-100"
+          >
+            <span className="text-sm font-medium">Platform</span>
+          </button>
           <a
             href="https://github.com/Lashen1227/asgardeo-actions-playground"
             target="_blank"
